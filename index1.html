@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Léana Zorzetto</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font (Cormorant Garamond) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .font-helv {
+      font-family: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .font-cormorant {
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .font-snell {
+      font-family: "Snell Roundhand", "Apple Chancery", "Zapfino", "Brush Script MT", cursive;
+      font-weight: 400;
+    }
+
+    .frosted-pill,
+    .frosted-panel {
+      position: relative;
+      z-index: 0;
+      isolation: isolate;
+      text-shadow:
+        0 1px 2px rgba(255, 255, 255, 0.70);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .frosted-pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 9999px;
+    }
+
+    .frosted-panel {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 16px;
+    }
+
+    .frosted-pill::before,
+    .frosted-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      /* remove backdrop blur for better performance/clarity */
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      box-shadow: none;
+      /* NOTE: backdrop-filter removed intentionally */
+      -webkit-mask-image: radial-gradient(closest-side at 50% 50%,
+          rgba(0, 0, 0, 1) 68%,
+          rgba(0, 0, 0, 0) 100%);
+      mask-image: radial-gradient(closest-side at 50% 50%,
+          rgba(0, 0, 0, 1) 68%,
+          rgba(0, 0, 0, 0) 100%);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Hover / focus: maximize contrast (dark bg + white text) */
+    .frosted-pill,
+    .frosted-panel {
+      position: relative;
+      transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
+    }
+
+    .frosted-pill:hover,
+    .frosted-pill:focus,
+    .frosted-pill:focus-visible,
+    .frosted-panel:hover,
+    .frosted-panel:focus,
+    .frosted-panel:focus-visible {
+      color: #ffffff !important;
+      background-color: rgba(0, 0, 0, 0.88);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      text-shadow: none;
+      /* ensure text is crisp on dark bg */
+    }
+
+    /* Force child elements to inherit white color on hover/focus */
+    .frosted-pill:hover *,
+    .frosted-pill:focus *,
+    .frosted-pill:focus-visible *,
+    .frosted-panel:hover *,
+    .frosted-panel:focus *,
+    .frosted-panel:focus-visible * {
+      color: #ffffff !important;
+    }
+
+    /* Ensure links inside panels change color too */
+    .frosted-panel:hover a,
+    .frosted-panel:focus a,
+    .frosted-panel:focus-visible a {
+      color: #ffffff !important;
+    }
+
+    /* Make sure the ::before background follows the hover state for full contrast */
+    .frosted-pill:hover::before,
+    .frosted-pill:focus::before,
+    .frosted-panel:hover::before,
+    .frosted-panel:focus::before {
+      background: rgba(0, 0, 0, 0.88);
+    }
+
+    /* Accessibility: visible focus ring for keyboard users */
+    .frosted-pill:focus-visible,
+    .frosted-panel:focus-visible {
+      outline: 3px solid rgba(255, 255, 255, 0.9);
+      outline-offset: 3px;
+    }
+
+    /* Project rows layout */
+    .project-layout {
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    .project-layout .text-center {
+      text-align: center
+    }
+
+    .row {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 22px
+    }
+
+    .row .slot {
+      flex: 1
+    }
+
+    /* different heights for rows to create hierarchy */
+    .row-left-right .img-slot {
+      height: 320px
+    }
+
+    .row-right-left .img-slot {
+      height: 320px
+    }
+
+    .row-single-center .img-slot {
+      height: 440px
+    }
+
+    /* bigger center image */
+    .row-single-center .slot {
+      display: flex;
+      justify-content: center;
+      align-items: center
+    }
+
+    /* center the child */
+
+    .bleed-dark, .bleed-white {
+      padding: 48px 0;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      width: 100vw;
+      box-sizing: border-box;
+      z-index: 20;
+    }
+    .bleed-dark { background: #000; color: #fff; }
+    .bleed-white { background: #fff; color: #000; }
+
+    /* remove inner container horizontal padding when bleeding */
+    .bleed-dark .project-layout, .bleed-white .project-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 24px
+    }
+
+    .bleed-dark #project-title, .bleed-dark #project-subtitle, .bleed-dark #project-description, .bleed-dark .project-meta { color: #fff }
+    .bleed-white #project-title, .bleed-white #project-subtitle, .bleed-white #project-description, .bleed-white .project-meta { color: #000 }
+
+    .bleed-dark .project-tools span { background: transparent; border-color: rgba(255, 255, 255, 0.12); color: #fff }
+    .bleed-white .project-tools span { background: #fff; border-color: #e5e7eb; color: #000 }
+
+    /* make sure no rounded container background shows white at edges */
+    .bleed-dark .slot, .bleed-dark .img-slot, .bleed-dark .special-slot,
+    .bleed-white .slot, .bleed-white .img-slot, .bleed-white .special-slot {
+      border-radius: 6px
+    }
+
+    @media (max-width: 767px) {
+      .bleed-dark, .bleed-white { padding: 28px 0 }
+      .bleed-dark .project-layout, .bleed-white .project-layout { padding-left: 16px; padding-right: 16px }
+    }
+
+    .img-slot {
+      width: 100%;
+      height: 320px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      background: #eee;
+      transition: box-shadow 240ms ease, transform 240ms ease
+    }
+
+    .img-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 300ms ease, opacity 300ms ease
+    }
+
+    .img-slot:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 45px 90px rgba(0, 0, 0, 0.16)
+    }
+
+    .img-single {
+      width: 80%;
+      max-width: 860px
+    }
+
+    .img-selected {
+      outline: 6px solid rgba(17, 17, 17, 0.95);
+      transform: scale(1.03);
+      box-shadow: 0 50px 100px rgba(0, 0, 0, 0.18)
+    }
+
+    .project-meta {
+      color: #6b7280;
+      font-size: 13px;
+      margin-top: 6px
+    }
+
+    .project-tools span {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 12px
+    }
+
+    @media (max-width: 767px) {
+      .row {
+        flex-direction: column
+      }
+
+      .img-slot {
+        height: 180px
+      }
+
+      .row-single-center .img-slot {
+        height: 220px
+      }
+
+      .img-single {
+        width: 100%
+      }
+    }
+
+    /* Hero collage: images reveal on first scroll */
+    #hero-collage .hero-img {
+      opacity: 0;
+      --hero-rot: 0deg;
+      transform: translateY(18px) scale(0.98) rotate(var(--hero-rot));
+      transition: opacity 900ms ease, transform 900ms ease;
+      will-change: opacity, transform;
+      pointer-events: none;
+    }
+
+    #hero-collage .hero-img.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(var(--hero-rot));
+    }
+
+    @keyframes subtle-swing {
+      0% { transform: rotate(-6deg); }
+      50% { transform: rotate(-3deg); }
+      100% { transform: rotate(-6deg); }
+    }
+
+    .animate-swing {
+      display: inline-block;
+      animation: subtle-swing 3s ease-in-out infinite;
+    }
+
+    .fixed-inverted {
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    .nav-link-hover {
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+    .nav-link-hover:hover {
+      transform: scale(1.08);
+    }
+  </style>
+</head>
+
+<body class="bg-white text-black">
+
+  <!-- PRELOADER -->
+  <div id="preloader"
+    class="fixed inset-0 bg-black text-white flex items-center justify-center px-10 z-50 transition-opacity duration-500 opacity-100">
+    <div id="preloader-text" class="text-center leading-none opacity-0 transition-opacity duration-1000">
+      <div class="font-cormorant text-[50px] sm:text-[90px] md:text-[150px] tracking-tight">
+        welcome to my
+      </div>
+
+      <div class="relative inline-block mt-2">
+        <span class="font-snell italic text-[70px] sm:text-[120px] md:text-[200px]">
+          portfolio
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION FIXE -->
+  <nav class="absolute lg:fixed top-4 md:top-10 left-0 w-full px-6 md:px-10 font-helv text-[14px] md:text-[18px] z-40 fixed-inverted">
+    <div class="flex justify-between md:grid md:grid-cols-3">
+      <a class="justify-self-start nav-link-hover" href="#presentation">Présentation</a>
+      <a class="justify-self-center nav-link-hover" href="#projet">Projet</a>
+      <a class="justify-self-end nav-link-hover" href="#moodboard">Moodboard</a>
+    </div>
+  </nav>
+
+  <!--  <!-- INFOS BAS -->
+  <div class="absolute lg:fixed bottom-4 md:bottom-10 left-0 w-full px-6 md:px-10 font-helv text-[12px] md:text-[16px] leading-tight z-40 fixed-inverted">
+    <div class="grid grid-cols-2 items-end">
+
+      <!-- left -->
+      <div class="justify-self-start space-y-1">
+        <div>06.51.80.54.66</div>
+        <div>leana.zorzetto@orange.fr</div>
+        <a href="#" class="underline underline-offset-2">Linkedin</a>
+      </div>
+
+      <!-- right -->
+      <div class="justify-self-end text-right space-y-1">
+        <div>Léana Zorzetto</div>
+        <div class="uppercase tracking-wide">B2 MARKETING &amp;</div>
+        <div class="uppercase tracking-wide">COMMUNICATION DIGITAL</div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- HERO FULLSCREEN (plus grand, centré) -->
+  <section id="hero-collage"
+    class="bleed-white min-h-screen flex items-center justify-center px-10 overflow-hidden">
+
+    <!-- IMAGE (126x155) left 183 top 110 -->
+    <img src="image/hero_new_1.jpg" alt="" class="hero-img absolute object-cover shadow-sm"
+      style="width:9.40%; height:19.30%; left:13.66%; top:13.70%; transition-delay:0ms;" />
+
+    <!-- IMAGE (158x197) left 561 top 141 -->
+    <img src="image/hero_new_4.png" alt="" class="hero-img absolute object-cover shadow-sm"
+      style="width:11.79%; height:24.53%; left:41.87%; top:17.56%; transition-delay:120ms;" />
+
+    <!-- IMAGE (213x243) left 135 top 394 -->
+    <img src="image/hero_new_3.png" alt="" class="hero-img absolute object-cover shadow-sm"
+      style="width:15.90%; height:30.26%; left:10.07%; top:49.07%; transition-delay:240ms;" />
+
+    <!-- IMAGE (158x198) left 683 top 516 -->
+    <img src="image/hero_new_2.png" alt="" class="hero-img absolute object-cover shadow-sm"
+      style="width:11.79%; height:24.66%; left:50.97%; top:64.26%; transition-delay:360ms;" />
+
+    <!-- IMAGE (164x319) left 1156 top 568 rotate 180 -->
+    <img src="image/hero_new_5.png" alt="" class="hero-img absolute object-cover shadow-sm"
+      style="width:12.24%; height:39.73%; left:77.53%; top:31.0%; transition-delay:480ms;" />
+
+    <!-- TITRE CENTRÉ -->
+    <div class="relative z-20 text-center leading-none">
+      <div class="font-cormorant text-[50px] sm:text-[90px] md:text-[150px] tracking-tight">
+        welcome to my
+      </div>
+
+      <div class="relative inline-block mt-2">
+        <span class="font-snell italic text-[70px] sm:text-[120px] md:text-[200px]">
+          portfolio
+        </span>
+
+        <span id="year" class="font-cormorant absolute -right-4 md:-right-20 top-[6%] -translate-y-1/2
+               text-[24px] md:text-[56px] tracking-wide
+               opacity-0 translate-y-2 transition-all duration-700">
+          2026
+        </span>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    (function () {
+      const hero = document.getElementById("hero-collage");
+      if (!hero) return;
+
+      const imgs = hero.querySelectorAll(".hero-img");
+      const year = document.getElementById("year");
+
+      let hasTriggered = false;
+      const initialScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+
+      function reveal() {
+        if (hasTriggered) return;
+        hasTriggered = true;
+
+        imgs.forEach(img => img.classList.add("is-visible"));
+
+        if (year) {
+          year.classList.remove("opacity-0", "translate-y-2");
+          year.classList.add("opacity-100", "translate-y-0");
+        }
+
+        window.removeEventListener("scroll", onFirstScroll, { passive: true });
+      }
+
+      function onFirstScroll() {
+        const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        if (Math.abs(currentScrollY - initialScrollY) < 2) return;
+        reveal();
+      }
+
+      /* déclenche au tout premier scroll */
+      window.addEventListener("scroll", onFirstScroll, { passive: true });
+    })();
+  </script>
+
+
+
+  <!-- RESPIRATION AVANT ABOUT -->
+  <div class="h-32 md:h-48"></div>
+
+  <!-- ABOUT -->
+  <section id="presentation" class="bleed-white py-16">
+    <div class="mx-auto max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_1.15fr] gap-16 items-start">
+
+        <!-- GAUCHE -->
+        <div class="relative flex flex-col items-center md:items-start">
+
+          <!-- TITRE -->
+          <h2 class="font-helv text-[36px] sm:text-[56px] md:text-[72px] leading-none tracking-tight uppercase mb-6 md:ml-16">
+            À PROPOS
+          </h2>
+
+          <div class="relative flex items-center gap-10">
+
+            <!-- QUOTE (desktop) -->
+            <div class="hidden md:block">
+              <p class="font-snell italic text-[22px] leading-tight text-black/80 animate-swing text-center">
+                “Je transforme<br />vos rêves en<br />réalité”
+              </p>
+            </div>
+
+            <!-- IMAGE (référence de hauteur) -->
+            <div class="w-full max-w-[340px] md:max-w-[380px] aspect-[340/520] md:aspect-[380/620]">
+              <img src="image/aboutme_new.png" alt="Portrait" class="w-full h-full object-cover" />
+            </div>
+
+          </div>
+
+          <!-- QUOTE (mobile) -->
+          <div class="md:hidden mt-8 text-center">
+            <p class="font-snell italic text-[22px] leading-tight text-black/80 animate-swing">
+              “Je transforme vos rêves en réalité”
+            </p>
+          </div>
+
+        </div>
+
+        <!-- DROITE : CENTRAGE OPTIQUE (légèrement plus bas) -->
+        <div class="flex items-center min-h-[520px] md:min-h-[620px] md:pt-20">
+          <div>
+            <h3 class="font-cormorant text-[40px] md:text-[48px] leading-none mb-6">
+              Léana Zorzetto
+            </h3>
+
+            <div class="font-helv text-[15px] md:text-[16px] leading-relaxed text-black/90 space-y-6 max-w-xl">
+              <p>
+                Je m'appelle Léana Zorzetto, Je suis étudiante en Bachelor Chef de Projet Digital et j’évolue en alternance dans le domaine du marketing et de la communication digitale. À travers mon parcours, j’ai développé des compétences en identité visuelle, création de sites web, UX/UI, SEO et gestion de projets. Mon alternance me permet de travailler sur des projets concrets de A à Z, en autonomie, de l’analyse des besoins jusqu’à la réalisation finale.
+              </p>
+
+              <p>
+                J’aime le digital parce qu’il me permet de mêler créativité, réflexion et réalisation. Au fil de mes expériences, j’ai appris à utiliser différents outils de design et de développement, tout en développant une approche polyvalente, organisée et tournée vers l’expérience utilisateur. Les projets que je présente dans ce portfolio reflètent ce que j’ai appris à l’école comme en entreprise, à travers des réalisations variées, concrètes et personnelles.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LES OUTILS -->
+  <section id="outils" class="bleed-white py-32">
+    <div class="mx-auto max-w-4xl text-center">
+
+      <!-- TITRE -->
+      <h2 class="font-helv text-[42px] md:text-[80px] uppercase tracking-tight mb-16">
+        Les outils
+      </h2>
+
+      <!-- LISTE -->
+      <ul class="font-helv text-[18px] md:text-[30px] tracking-wide leading-snug">
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              VS CODE
+              <img src="image/logovscode.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              PHOTOSHOP
+              <img src="image/logo-photo.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              ILLUSTRATOR
+              <img src="image/logo-illustrato.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              CANVA
+              <img src="image/logo-canva.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              FIGMA
+              <img src="image/logo-figma.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              GESTION SEO
+              <img src="image/logo-seo.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+        <li
+          class="group relative w-screen left-1/2 -translate-x-1/2 py-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div class="mx-auto max-w-4xl flex justify-center">
+            <span class="inline-flex items-center gap-4">
+              CHAT GPT
+              <img src="image/logo-chatgpt.png" alt=""
+                class="w-8 h-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            </span>
+          </div>
+        </li>
+
+      </ul>
+
+    </div>
+  </section>
+
+  <!-- RESPIRATION -->
+  <div class="bleed-white h-28 md:h-30"></div>
+
+
+
+
+
+
+
+
+
+
+  <!-- LES PROJETS ET PARCOURS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --sans: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      .font-sanslike {
+        font-family: var(--sans);
+      }
+
+      .font-cormorant {
+        font-family: "Cormorant Garamond", serif;
+      }
+
+      /* Parallax hero image */
+      .parallax-hero {
+        width: 100%;
+        overflow: hidden;
+        height: 420px;
+      }
+
+      @media (min-width: 640px) {
+        .parallax-hero {
+          height: 520px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .parallax-hero {
+          height: 680px;
+        }
+      }
+
+      .parallax-hero>img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 120%;
+        /* On dépasse un peu pour avoir de la marge de mouvement */
+        object-fit: cover;
+        will-change: transform;
+        transform: translate3d(0, -10%, 0);
+        /* Position de départ centrée avec l'échelle */
+      }
+
+      /* underline élégant sous le titre (optionnel, comme ta capture) */
+      .title-swish {
+        position: relative;
+        display: inline-block;
+      }
+
+      .title-swish::after {
+        /* supprimé sur demande — aucune ligne sous le titre */
+        display: none;
+      }
+    </style>
+
+    <!-- HERO IMAGE -->
+    <div id="parallax-separation" class="parallax-hero relative z-0">
+      <img src="image/separation.jpg" alt="fleur blanche sur fond noir" loading="lazy" decoding="async" />
+    </div>
+
+    <!-- TITLE + 2 COL TEXT -->
+    <div class="bleed-dark bg-black pt-14 text-center z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <h2 class="font-cormorant text-[32px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal">
+          <span class="title-swish">MON PARCOURS & MES RÉALISATIONS</span>
+        </h2>
+
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 text-left">
+        <p class="font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90">
+          À travers ce portfolio, je présente une sélection des projets les plus pertinents que j’ai réalisés au cours de mon parcours, aussi bien en alternance qu’à l’école. J’ai choisi de mettre en avant des projets concrets, représentatifs des compétences que j’ai développées au fil de ma formation et de mes expériences en entreprise. Chacun d’eux reflète une facette différente de mon profil, avec des contextes, des objectifs et des approches variés, tout en possédant sa propre identité, son propre style et ses spécificités.
+        </p>
+
+        <p class="font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90">
+          Ces projets m’ont permis de travailler sur des problématiques réelles, de découvrir différentes méthodes de conception, de développement et de gestion, et de mettre en pratique les connaissances acquises aussi bien dans le cadre scolaire que professionnel. J’ai volontairement retenu les réalisations qui me semblent les plus marquantes et les plus révélatrices de mon évolution, de ma capacité d’adaptation et de ma manière de travailler.
+        </p>
+      </div>
+    </div>
+  </div>
+
+    <!-- PARALLAX JS (hero image) -->
+    <script>
+      (function () {
+        const wrap = document.getElementById("parallax-separation");
+        if (!wrap) return;
+
+        const img = wrap.querySelector("img");
+        if (!img) return;
+
+        const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+        if (reduceMotion && reduceMotion.matches) return;
+
+        let rafId = null;
+        // On retire les constantes de pixels pour passer en pourcentage (plus robuste sur mobile/desktop)
+
+        function update() {
+          rafId = null;
+
+          const rect = wrap.getBoundingClientRect();
+          const vh = window.innerHeight || document.documentElement.clientHeight;
+
+          if (rect.bottom <= 0 || rect.top >= vh) return;
+
+          // progress: 0 -> section en bas de l'écran, 1 -> section en haut
+          const progress = (vh - rect.top) / (vh + rect.height);
+          const clamped = Math.min(1, Math.max(0, progress));
+
+          // On calcule le déplacement pour que l'image semble bouger plus lentement que le scroll
+          // ce qui crée l'effet de profondeur.
+          const movement = (clamped - 0.5) * 15; // pourcentage de déplacement
+
+          img.style.transform = `translate3d(0, ${movement.toFixed(2)}%, 0)`;
+        }
+
+        function requestUpdate() {
+          if (rafId !== null) return;
+          rafId = requestAnimationFrame(update);
+        }
+
+        update();
+        window.addEventListener("scroll", requestUpdate, { passive: true });
+        window.addEventListener("resize", requestUpdate);
+      })();
+    </script>
+
+    <!-- BIG TITLE -->
+    <div class="bleed-dark bg-black py-28 md:py-36 text-center">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <h2 class="font-sanslike text-[32px] sm:text-[72px] md:text-[85px] leading-[1] font-normal tracking-wide">
+          MES PROJETS
+        </h2>
+      </div>
+    </div>
+
+    <!-- PROJECT 0 (ECOPLAISANCE - text left / image right) -->
+    <section id="project-0" class="bleed-dark bg-black pb-28 md:pb-44">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-14 md:gap-20 items-center">
+        <!-- TEXT BLOCK -->
+        <div class="flex flex-col justify-center">
+          <h3
+            class="font-cormorant text-[44px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal text-left uppercase">
+            ECOPLAISANCE
+          </h3>
+          <div class="mt-6 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 max-w-[750px] space-y-6">
+            <p>
+              Eco Plaisance propose la location de bateaux électriques et de paddles éco-responsables pour découvrir le Delta de la Leyre et le Bassin d’Arcachon dans une démarche plus respectueuse de l’environnement. Dans le cadre de ce projet, j’ai réalisé une refonte complète de leur site internet de A à Z, avec l’objectif de moderniser leur présence en ligne et de mieux refléter leur identité de marque.
+            </p>
+            <p>
+              J’ai repensé l’ensemble du site, aussi bien sur le plan visuel que structurel, afin d’améliorer la navigation, de rendre l’expérience utilisateur plus fluide et de valoriser leurs services de manière plus claire et attractive. J’ai également retravaillé leur identité visuelle, notamment à travers la refonte du logo, pour proposer une image plus cohérente, plus actuelle et davantage en lien avec leurs valeurs écologiques.
+            </p>
+            <p>
+              J’ai aussi travaillé sur les aspects techniques du site en optimisant les images pour améliorer les temps de chargement, en renforçant le référencement naturel (SEO) pour gagner en visibilité, et en veillant à proposer un rendu global à la fois esthétique, performant et fonctionnel.
+            </p>
+            <p>
+              Ce projet illustre ma capacité à gérer une création web dans sa globalité, de la réflexion initiale jusqu’à la mise en ligne, en prenant en compte l’image de marque, les besoins de l’utilisateur et les enjeux de performance digitale.
+            </p>
+          </div>
+          <a href="https://ecoplaisance.fr" target="_blank" rel="noopener noreferrer"
+            class="mt-8 inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px] text-white/90 transition duration-300 select-none group active:scale-[0.97]">
+            <span class="relative">
+              Visiter le site
+              <span
+                class="absolute -bottom-2 left-0 h-px w-full bg-white/60 origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
+            </span>
+            <span class="inline-flex items-center gap-3">
+              <span
+                class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+              <svg class="w-4 h-4 text-white/80 transition-transform duration-300 ease-out group-hover:translate-x-1"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </span>
+          </a>
+        </div>
+        <!-- IMAGE -->
+        <div class="md:flex md:justify-end">
+          <div class="w-[280px] sm:w-[312px] aspect-[312/487] overflow-hidden mx-auto md:mx-0">
+            <img src="image/Frame 8.png" alt="Eco Plaisance Website"
+              class="w-full h-full object-cover grayscale" />
+          </div>
+        </div>
+      </div>
+      </div>    </section>
+
+    <!-- SEPARATOR -->
+    <div class="bleed-dark bg-black py-12 md:py-24">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <div class="h-px w-full bg-white/40"></div>
+      </div>
+    </div>
+
+    <!-- PROJECT 1 (AVENIR FITNESS - image left / text right) -->
+    <section id="project-avenir" class="bleed-dark bg-black pb-28 md:pb-44">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-14 md:gap-20 items-center">
+        <!-- IMAGE -->
+        <div class="md:flex md:justify-start order-2 md:order-1">
+          <div class="w-[280px] sm:w-[312px] aspect-[312/487] overflow-hidden mx-auto md:mx-0">
+            <!-- Placeholder fitness image -->
+            <img src="image/avenir-fitness-new.png" alt="Avenir Fitness Website"
+              class="w-full h-full object-cover grayscale" />
+          </div>
+        </div>
+
+        <!-- TEXT BLOCK -->
+        <div class="order-1 md:order-2 flex flex-col justify-center">
+          <h3
+            class="font-cormorant text-[44px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal text-left uppercase">
+            AVENIR FITNESS
+          </h3>
+          <div class="mt-6 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 max-w-[750px] text-left space-y-6">
+            <p>
+              J’ai conçu le site internet de cette nouvelle salle de sport de A à Z, en respectant une direction artistique imposée afin de créer un univers visuel cohérent avec l’image de la marque. Mon travail a consisté à développer un site clair, moderne et fonctionnel, pensé pour mettre en valeur les services proposés tout en offrant une navigation fluide et agréable aux utilisateurs.
+            </p>
+            <p>
+              En parallèle, je travaille actuellement sur le développement du blog afin d’améliorer le référencement naturel du site et de renforcer sa visibilité en ligne. J’ai également réalisé plusieurs supports de communication print, comme des cartes de visite, des plannings, des flyers et des affiches, dans le but d’assurer une cohérence globale entre la communication digitale et les supports physiques.
+            </p>
+            <p>
+              Ce projet met en avant ma capacité à intervenir sur différents aspects d’une communication de marque, en alliant création web, réflexion visuelle et conception de supports de communication.
+            </p>
+          </div>
+
+          <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
+            <!-- SITE LINK -->
+            <a href="https://avenir-fitness.pages.dev" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px] text-white/90 transition duration-300 select-none group active:scale-[0.97]">
+              <span class="relative">
+                Visiter le site
+                <span
+                  class="absolute -bottom-2 left-0 h-px w-full bg-white/60 origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
+              </span>
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+                <svg class="w-4 h-4 text-white/80 transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </a>
+
+            <!-- EN SAVOIR PLUS BUTTON -->
+            <button id="btn-more-project-avenir" type="button" aria-expanded="false"
+              aria-controls="more-images-project-avenir"
+              class="inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px] text-white/90 transition duration-300 select-none group focus:outline-none active:scale-[0.97]">
+              <span id="btn-more-project-avenir-label" class="relative">
+                En savoir plus
+                <span
+                  class="absolute -bottom-2 left-0 h-px w-full bg-white/60 origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
+              </span>
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+                <svg class="chev w-4 h-4 text-white/80 transition-transform duration-300 ease-out" viewBox="0 0 24 24"
+                  fill="none" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ZONE IMAGES DÉPLIABLE -->
+      <div id="more-images-project-avenir"
+        class="reveal-panel mt-10 overflow-hidden max-h-0 opacity-0 translate-y-2 transition-all duration-500 ease-in-out"
+        aria-hidden="true">
+        <div class="mt-20 w-full px-4 md:px-0 space-y-12">
+          <!-- First: Carte VIP (Matched width) -->
+          <div class="max-w-[700px] mx-auto">
+            <div class="bg-black overflow-hidden shadow-sm w-full">
+              <img src="image/carte-VIP.png" class="w-full h-auto" alt="Carte VIP">
+            </div>
+          </div>
+
+          <!-- Second line: 2 images (Règle and QR Code) (Reduced width) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-[700px] mx-auto">
+            <div class="bg-black overflow-hidden shadow-sm aspect-[3/4]">
+              <img src="image/regle.png" class="w-full h-full object-cover" alt="Règle">
+            </div>
+            <div class="bg-black overflow-hidden shadow-sm aspect-[3/4]">
+              <img src="image/QR code.png" class="w-full h-full object-cover" alt="QR Code">
+            </div>
+          </div>
+
+          <!-- Third line: Flyer (Reduced width) -->
+          <div class="max-w-[700px] mx-auto">
+            <div class="bg-black overflow-hidden shadow-sm w-full">
+              <img src="image/flyer:poste3.jpg" class="w-full h-auto" alt="Flyer Poste 3">
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>    </section>
+      </div>
+
+
+
+
+
+    <!-- SEPARATOR -->
+    <div class="bleed-dark bg-black py-24 md:py-36">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <div class="h-px w-full bg-white/80"></div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2 (YMMERSION - text left / image right) -->
+    <div class="bleed-dark bg-black pb-28 md:pb-44">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-14 md:gap-20 items-center">
+
+        <!-- TEXT COLUMN -->
+        <div class="flex flex-col justify-center">
+
+          <!-- WRAPPER TEXTE aligné à gauche -->
+          <div class="max-w-[750px]">
+
+            <h3 class="font-cormorant text-[44px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal text-left">
+              YMMERSION
+            </h3>
+
+            <p
+              class="mt-6 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              Ymmersion est un challenge intensif d’une semaine durant lequel j’ai participé à la refonte complète du
+              site internet et de l’identité visuelle de Mathilde Raison, photographe spécialisée dans les mariages haut
+              de gamme et les prestations BtoB.
+            </p>
+
+            <p
+              class="mt-4 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              L’enjeu était double : moderniser son image en ligne tout en rééquilibrant sa communication entre son
+              activité mariage et son offre destinée aux entreprises.
+            </p>
+
+            <p
+              class="mt-4 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              Nous avons commencé par une analyse approfondie de son positionnement, complétée par une étude de marché
+              et un benchmark concurrentiel. L’objectif : identifier les leviers de différenciation et concevoir une
+              expérience digitale plus cohérente, fluide et alignée avec sa vision.
+            </p>
+
+            <p
+              class="mt-4 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              Le projet s’est concrétisé par la réalisation d’une maquette interactive sur Figma, pensée pour optimiser
+              le parcours utilisateur et valoriser clairement ses deux segments d’activité.
+            </p>
+
+            <!-- BOUTON AMÉLIORÉ -->
+            <button id="btn-more-project2" type="button" aria-expanded="false" aria-controls="more-images-project2"
+              class="mt-8 inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px]
+                 text-white/90 transition duration-300 select-none group
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60
+                 focus-visible:ring-offset-4 focus-visible:ring-offset-black
+                 active:scale-[0.97]">
+              <!-- Texte + underline animée -->
+              <span id="btn-more-project2-label" class="relative">
+                En savoir plus
+                <span class="absolute -bottom-2 left-0 h-px w-full bg-white/60
+                     origin-left scale-x-0 transition-transform duration-300 ease-out
+                     group-hover:scale-x-100"></span>
+              </span>
+
+              <!-- Trait + chevron -->
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+                <svg class="chev w-4 h-4 text-white/80 transition-transform duration-300 ease-out" viewBox="0 0 24 24"
+                  fill="none" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="md:flex md:justify-end">
+          <div class="w-[280px] sm:w-[312px] aspect-[312/487] overflow-hidden mx-auto md:mx-0">
+            <img src="image/YMMERSION1.png" alt="Ymmersion Site" class="w-full h-full object-cover grayscale" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ZONE IMAGES DÉPLIABLE -->
+      <div id="more-images-project2" class="reveal-panel mt-10 overflow-hidden max-h-0 opacity-0 translate-y-2
+           transition-all duration-500 ease-in-out" aria-hidden="true">
+
+        <!-- Layout mixte (7 images) : Portrait pour les captures, Paysage pour les slides -->
+        <div class="mt-20 w-full px-4 md:px-0">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-[1100px] mx-auto">
+
+            <!-- Image 1 (Portrait) -->
+            <div class="bg-black overflow-hidden shadow-sm">
+              <img src="image/YMMERSION1.png" class="w-full h-auto" alt="Ymmersion Site Photographe 1">
+            </div>
+
+            <!-- Image 2 (Portrait) -->
+            <div class="bg-black overflow-hidden shadow-sm">
+              <img src="image/YMMERSION2.png" class="w-full h-auto" alt="Ymmersion Site Photographe 2">
+            </div>
+
+            <!-- Image 3 (Portrait) -->
+            <div class="bg-black overflow-hidden shadow-sm">
+              <img src="image/YMMERSION3.png" class="w-full h-auto" alt="Ymmersion Site Photographe 3">
+            </div>
+
+            <!-- Image 4 (Portrait - Row 2, Col 1) -->
+            <div class="bg-black overflow-hidden shadow-sm">
+              <img src="image/YMMERSION4.png" class="w-full h-auto" alt="Ymmersion Site Photographe 4">
+            </div>
+
+            <!-- Image 5 (Portrait - Row 2, Col 2) -->
+            <div class="bg-black overflow-hidden shadow-sm">
+              <img src="image/YMMERSION5.png" class="w-full h-auto" alt="Ymmersion Site Photographe 5">
+            </div>
+
+            <!-- Images 6, 7 & 8 (Stacked - Row 2, Col 3) -->
+            <div class="flex flex-col gap-6 lg:gap-8 self-center">
+              <!-- Image 6 -->
+              <div class="aspect-video bg-black overflow-hidden shadow-sm">
+                <img src="image/YMMERSION6.png" class="w-full h-full object-contain bg-black"
+                  alt="Ymmersion Presentation 1">
+              </div>
+
+              <!-- Image 7 -->
+              <div class="aspect-video bg-black overflow-hidden shadow-sm">
+                <img src="image/YMMERSION7.png" class="w-full h-full object-contain bg-black"
+                  alt="Ymmersion Presentation 2">
+              </div>
+
+              <!-- Image 8 -->
+              <div class="aspect-video bg-black overflow-hidden shadow-sm">
+                <img src="image/YMMERSION8.png" class="w-full h-full object-contain bg-black"
+                  alt="Ymmersion Presentation 3">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEPARATOR -->
+    <div class="bleed-dark bg-black py-24 md:py-36 z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <div class="h-px w-full bg-white/80"></div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 (AGENCE AGLÉA - image left / text right) -->
+    <section id="project-3" class="bleed-dark bg-black pb-28 md:pb-44 z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-14 md:gap-20 items-center">
+
+        <!-- IMAGE -->
+        <div class="md:flex md:justify-start order-2 md:order-1">
+          <div class="w-[280px] sm:w-[312px] aspect-[312/487] overflow-hidden mx-auto md:mx-0">
+            <img src="image/agence-aglea1.png" alt="Agence Aglea" class="w-full h-full object-cover grayscale" />
+          </div>
+        </div>
+
+        <!-- TEXT BLOCK -->
+        <div class="order-1 md:order-2 flex flex-col justify-center">
+          <h3
+            class="font-cormorant text-[44px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal text-left">
+            AGENCE AGLÉA
+          </h3>
+
+          <div class="max-w-[750px] space-y-6">
+            <p class="mt-6 font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              Dans le cadre de ma formation, mon école nous a demandé de mener un projet concret tout au long de l’année. Avec mon groupe, nous avons donc choisi de créer notre propre agence d’événementiel mode, Agléa, avec pour objectif d’organiser un véritable défilé de mode de A à Z. L’idée était de construire un projet réel, ambitieux et complet, en imaginant tout ce qui est nécessaire pour faire naître un événement de cette ampleur.
+            </p>
+            <p class="font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              Notre travail consiste à développer l’ensemble du projet : création de l’identité de l’agence, conception du site internet, stratégie de communication, recherche de mannequins, de créateurs, de couturiers, de partenaires et d’un lieu capable d’accueillir le défilé. Nous avons également mis en place un partenariat avec l’association Le Lien du Cœur, au cœur de cet événement, afin de lui apporter de la visibilité et de soutenir sa cause à travers le thème du défilé.
+            </p>
+            <p class="font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 text-left">
+              À travers Agléa, notre volonté est aussi de donner leur chance à des profils débutants ou peu visibles, comme de jeunes créateurs ou des personnes qui rêvent de devenir mannequins, dans un milieu souvent difficile d’accès. Ce projet met en avant ma capacité à travailler sur une idée concrète, à participer à son développement global et à contribuer à une communication porteuse de sens, mêlant créativité, organisation et engagement.
+            </p>
+          </div>
+
+
+          <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
+            <!-- BOUTON EN SAVOIR PLUS -->
+            <button id="btn-more-project3" type="button" aria-expanded="false" aria-controls="more-images-project3"
+              class="inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px]
+                text-white/90 transition duration-300 select-none group
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60
+                focus-visible:ring-offset-4 focus-visible:ring-offset-black
+                active:scale-[0.97]">
+              <span id="btn-more-project3-label" class="relative">
+                En savoir plus
+                <span class="absolute -bottom-2 left-0 h-px w-full bg-white/60
+                    origin-left scale-x-0 transition-transform duration-300 ease-out
+                    group-hover:scale-x-100"></span>
+              </span>
+
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+                <svg class="chev w-4 h-4 text-white/80 transition-transform duration-300 ease-out" viewBox="0 0 24 24"
+                  fill="none" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+
+            <!-- TIKTOK LINK -->
+            <a href="https://www.tiktok.com/@agence.aglea" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px] text-white/90 transition duration-300 select-none group active:scale-[0.97]">
+              <span class="relative">
+                TikTok
+                <span
+                  class="absolute -bottom-2 left-0 h-px w-full bg-white/60 origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
+              </span>
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+                <svg class="w-4 h-4 text-white/80 transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+
+            <!-- INSTAGRAM LINK -->
+            <a href="https://www.instagram.com/aglea.agence/" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-4 w-fit font-sanslike text-[16px] sm:text-[17px] text-white/90 transition duration-300 select-none group active:scale-[0.97]">
+              <span class="relative">
+                Instagram
+                <span
+                  class="absolute -bottom-2 left-0 h-px w-full bg-white/60 origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
+              </span>
+              <span class="inline-flex items-center gap-3">
+                <span
+                  class="inline-block h-px w-8 bg-white/60 transition-all duration-300 ease-out group-hover:w-12"></span>
+                <svg class="w-4 h-4 text-white/80 transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- ZONE IMAGES DÉPLIABLE (FULL WIDTH BLACK) -->
+      <div id="more-images-project3" class="reveal-panel overflow-hidden max-h-0 opacity-0 translate-y-2
+           transition-all duration-500 ease-in-out bg-black w-screen relative left-1/2 -ml-[50vw]" aria-hidden="true">
+        <div class="py-20 w-full px-4 md:px-0">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-10 max-w-[1100px] mx-auto">
+            <!-- Image 2 (Landscape/Instagram) -->
+            <div class="aspect-[4/3] bg-black overflow-hidden shadow-sm">
+              <img src="image/agence-aglea2.png" class="w-full h-full object-cover" alt="Agence Agléa View 2">
+            </div>
+            <!-- Image 3 (Landscape/Instagram) -->
+            <div class="aspect-[4/3] bg-black overflow-hidden shadow-sm">
+              <img src="image/agence-aglea3.png" class="w-full h-full object-cover" alt="Agence Agléa View 3">
+            </div>
+            <!-- Image 1 (Portrait/Full Page) -->
+            <div class="aspect-[3/7.5] bg-black overflow-hidden shadow-sm">
+              <img src="image/agence-aglea1.png" class="w-full h-full object-contain" alt="Agence Agléa View 1">
+            </div>
+            <!-- Stack Image 4 & 5 -->
+            <div class="flex flex-col gap-6 lg:gap-8 self-center">
+              <!-- Image 4 (Portrait/Mobile) -->
+              <div class="aspect-[3/4.5] bg-black overflow-hidden shadow-sm">
+                <img src="image/agence-aglea4.png" class="w-full h-full object-contain" alt="Agence Agléa View 4">
+              </div>
+              <!-- Image 5 (Logo/Landscape) -->
+              <div class="aspect-video bg-black overflow-hidden shadow-sm">
+                <img src="image/agence-aglea5.png" class="w-full h-full object-contain bg-black"
+                  alt="Agence Agléa View 5">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      </div>    <!-- STYLE pour la flèche (état ouvert) -->
+    <style>
+      #btn-more-project-avenir[aria-expanded="true"] .chev,
+      #btn-more-project2[aria-expanded="true"] .chev,
+      #btn-more-project3[aria-expanded="true"] .chev {
+        transform: rotate(180deg);
+      }
+    </style>
+
+    <!-- JS TOGGLE -->
+    <script>
+      // Toggle logic for Avenir Fitness
+      (function () {
+        const btn = document.getElementById("btn-more-project-avenir");
+        const label = document.getElementById("btn-more-project-avenir-label");
+        const panel = document.getElementById("more-images-project-avenir");
+        const images = panel ? panel.querySelectorAll("img") : [];
+
+        images.forEach((img, index) => {
+          img.style.transitionDelay = `${index * 90}ms`;
+        });
+
+        function openPanel() {
+          panel.classList.remove("is-open");
+          void panel.offsetHeight;
+          panel.classList.remove("max-h-0", "opacity-0", "translate-y-2");
+          panel.classList.add("opacity-100");
+          panel.style.maxHeight = panel.scrollHeight + "px";
+          panel.setAttribute("aria-hidden", "false");
+          btn.setAttribute("aria-expanded", "true");
+          label.textContent = "Réduire";
+
+          setTimeout(() => {
+            panel.classList.add("is-open");
+          }, 10);
+        }
+
+        function closePanel() {
+          panel.classList.remove("is-open");
+          panel.style.maxHeight = "0px";
+          panel.classList.add("opacity-0", "translate-y-2");
+          panel.setAttribute("aria-hidden", "true");
+          btn.setAttribute("aria-expanded", "false");
+          label.textContent = "En savoir plus";
+        }
+
+        btn.addEventListener("click", () => {
+          const isExpanded = btn.getAttribute("aria-expanded") === "true";
+          if (isExpanded) closePanel(); else openPanel();
+        });
+      })();
+
+      // Toggle logic for Project 2
+      (function () {
+        const btn = document.getElementById("btn-more-project2");
+        const label = document.getElementById("btn-more-project2-label");
+        const panel = document.getElementById("more-images-project2");
+        const images = panel ? panel.querySelectorAll("img") : [];
+
+        images.forEach((img, index) => {
+          img.style.transitionDelay = `${index * 90}ms`;
+        });
+
+        function openPanel() {
+          panel.classList.remove("is-open");
+          void panel.offsetHeight;
+          panel.classList.remove("max-h-0", "opacity-0", "translate-y-2");
+          panel.classList.add("opacity-100");
+          panel.style.maxHeight = panel.scrollHeight + "px";
+          panel.setAttribute("aria-hidden", "false");
+          btn.setAttribute("aria-expanded", "true");
+          label.textContent = "Réduire";
+
+          setTimeout(() => {
+            panel.classList.add("is-open");
+          }, 10);
+        }
+
+        function closePanel() {
+          panel.classList.remove("is-open");
+          panel.style.maxHeight = "0px";
+          panel.classList.add("opacity-0", "translate-y-2");
+          panel.setAttribute("aria-hidden", "true");
+          btn.setAttribute("aria-expanded", "false");
+          label.textContent = "En savoir plus";
+        }
+
+        btn.addEventListener("click", () => {
+          const isExpanded = btn.getAttribute("aria-expanded") === "true";
+          if (isExpanded) closePanel(); else openPanel();
+        });
+      })();
+
+      // Toggle logic for Project 3
+      (function () {
+        const btn = document.getElementById("btn-more-project3");
+        const label = document.getElementById("btn-more-project3-label");
+        const panel = document.getElementById("more-images-project3");
+        const images = panel ? panel.querySelectorAll("img") : [];
+
+        images.forEach((img, index) => {
+          img.style.transitionDelay = `${index * 90}ms`;
+        });
+
+        function openPanel() {
+          panel.classList.remove("is-open");
+          void panel.offsetHeight;
+          panel.classList.remove("max-h-0", "opacity-0", "translate-y-2");
+          panel.classList.add("opacity-100");
+          panel.style.maxHeight = panel.scrollHeight + "px";
+          panel.setAttribute("aria-hidden", "false");
+          btn.setAttribute("aria-expanded", "true");
+          label.textContent = "Réduire";
+
+          setTimeout(() => {
+            panel.classList.add("is-open");
+          }, 10);
+        }
+
+        function closePanel() {
+          panel.classList.remove("is-open");
+          panel.style.maxHeight = "0px";
+          panel.classList.add("opacity-0", "translate-y-2");
+          panel.setAttribute("aria-hidden", "true");
+          btn.setAttribute("aria-expanded", "false");
+          label.textContent = "En savoir plus";
+        }
+
+        btn.addEventListener("click", () => {
+          const isExpanded = btn.getAttribute("aria-expanded") === "true";
+          if (isExpanded) closePanel(); else openPanel();
+        });
+      })();
+    </script>
+
+
+
+
+
+    <!-- SEPARATOR -->
+    <div class="bleed-dark bg-black py-24 md:py-36 z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <div class="h-px w-full bg-white/80"></div>
+      </div>
+    </div>
+
+    <!-- SECTION FLYER / POSTE -->
+    <section id="flyer-section" class="bleed-dark bg-black pb-28 md:pb-44 z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <div class="text-center mb-16">
+        <h2 class="font-cormorant text-[44px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal uppercase">
+          FLYER / POSTE
+        </h2>
+        <p class="font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 mx-auto max-w-3xl mt-6">
+          Conception de supports publicitaires et de publications pour les réseaux sociaux, alliant stratégie de communication et design graphique.
+        </p>
+      </div>
+
+      <div class="max-w-[1100px] mx-auto space-y-20">
+        <!-- Row 1: 2, 4 & 6 (3-column layout) -->
+        <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-16">
+          <div class="overflow-hidden shadow-lg bg-black mx-auto w-full max-w-[280px] sm:max-w-none">
+            <img src="image/flyer:poste2.jpg" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+              alt="Flyer 2">
+          </div>
+          <div class="overflow-hidden shadow-lg bg-black mx-auto w-full max-w-[280px] sm:max-w-none">
+            <img src="image/flyer:poste4.jpg" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+              alt="Flyer 4">
+          </div>
+          <div class="overflow-hidden shadow-lg bg-black mx-auto w-full max-w-[280px] sm:max-w-none">
+            <img src="image/flyer:poste6.jpg" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+              alt="Flyer 6">
+          </div>
+        </div>
+
+        <!-- Row 2: 1, 5 & 7 (3-column layout) -->
+        <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-16">
+          <div class="overflow-hidden shadow-lg bg-black mx-auto w-full max-w-[280px] sm:max-w-none">
+            <img src="image/flyer:poste1.jpg" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+              alt="Flyer 1">
+          </div>
+          <div class="overflow-hidden shadow-lg bg-black mx-auto w-full max-w-[280px] sm:max-w-none">
+            <img src="image/flyer:poste5.jpg" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+              alt="Flyer 5">
+          </div>
+          <div class="overflow-hidden shadow-lg bg-black mx-auto w-full max-w-[280px] sm:max-w-none">
+            <img src="image/flyer:poste7.jpg" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+              alt="Flyer 7">
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- SEPARATOR -->
+    <div class="bleed-dark bg-black py-24 md:py-36 z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <div class="h-px w-full bg-white/80"></div>
+      </div>
+    </div>
+
+    <!-- SECTION LOGO -->
+    <section id="logo-section" class="bleed-dark bg-black pb-28 md:pb-44 z-20">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <div class="text-center mb-16">
+        <h2 class="font-cormorant text-[44px] sm:text-[52px] md:text-[60px] leading-[1.1] font-normal uppercase">
+          LOGO
+        </h2>
+        <p class="font-sanslike text-[16px] sm:text-[18px] md:text-[20px] leading-relaxed text-white/90 mx-auto max-w-3xl mt-6">
+          Voici une sélection de logotypes et d'identités visuelles créés pour divers projets, mettant l'accent sur la clarté et l'impact mémorable.
+        </p>
+      </div>
+
+      <div class="w-full max-w-[280px] sm:max-w-2xl mx-auto flex justify-center">
+        <img src="image/tout les logos.png" class="w-full h-auto transition-transform duration-500 hover:scale-105"
+          alt="Tous les logos">
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- MOODBOARD -->
+    <section id="moodboard" class="bleed-white py-40">
+      <div class="mx-auto max-w-6xl text-center px-4 md:px-10">
+
+        <!-- TITRE -->
+        <h2 class="font-helv text-[64px] md:text-[80px] uppercase tracking-tight mb-20 text-black">
+          MOODBOARD
+        </h2>
+
+        <!-- GRILLE LIBRE (positions fixes) -->
+        <div class="relative w-full max-w-none mx-auto bg-white overflow-hidden" style="aspect-ratio: 616 / 1046;">
+          <!-- petite barre noire en haut -->
+          <div class="absolute bg-black" style="left:20.78%; top:2.68%; width:9.25%; height:1.25%;"></div>
+
+          <!-- 1) Jeans pocket (haut droite) -->
+          <img src="image/1.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:58.60%; top:0%; width:21.75%; height:16.44%;" data-delay="0" />
+
+          <!-- 2) Palm (haut centre) -->
+          <img src="image/2.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:43.34%; top:4.49%; width:13.64%; height:11.95%;" data-delay="100" />
+
+          <!-- 3) Runway (haut gauche) -->
+          <img src="image/3.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:20.62%; top:10.80%; width:21.43%; height:19.60%;" data-delay="200" />
+
+          <!-- 4) Central framed beach (milieu, fond noir) -->
+          <img src="image/4.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:44.32%; top:17.30%; width:21.75%; height:22.56%;" data-delay="300" />
+
+          <!-- 5) Bowls / kitchen (haut droite) -->
+          <img src="image/5.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:69.48%; top:17.50%; width:12.99%; height:13.48%;" data-delay="400" />
+
+          <!-- 6) Laptop (milieu gauche) -->
+          <img src="image/6.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:28.57%; top:31.26%; width:12.99%; height:13.00%;" data-delay="500" />
+
+          <!-- 7) Mascara / makeup (centre bas-milieu) -->
+          <img src="image/7.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:43.83%; top:40.25%; width:20.94%; height:21.80%;" data-delay="600" />
+
+          <!-- 8) Volley / beach net (milieu droite) -->
+          <img src="image/8.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:67.05%; top:41.11%; width:15.58%; height:13.10%;" data-delay="700" />
+
+          <!-- 9) Tulips (gros bloc gauche) -->
+          <img src="image/9.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:17.53%; top:45.12%; width:24.03%; height:21.03%;" data-delay="800" />
+
+          <!-- 10) Eiffel tower (petit noir centre) -->
+          <img src="image/10.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:44.32%; top:62.62%; width:11.53%; height:11.76%;" data-delay="900" />
+
+          <!-- 11) Stairs / cat (droite milieu-bas) -->
+          <img src="image/11.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:58.93%; top:62.72%; width:21.10%; height:18.64%;" data-delay="1000" />
+
+          <!-- 12) Palms (bas gauche petit) -->
+          <img src="image/12.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:17.53%; top:75.62%; width:12.99%; height:11.85%;" data-delay="1100" />
+
+          <!-- 13) Big dark flower (bas centre) -->
+          <img src="image/13.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:31.66%; top:76.00%; width:25.65%; height:20.08%;" data-delay="1200" />
+
+          <!-- 14) Camera hands (bas droite) -->
+          <img src="image/14.jpg" alt="" class="absolute object-cover opacity-0 transition-all duration-1000 ease-out"
+            style="left:58.93%; top:82.98%; width:15.42%; height:12.14%;" data-delay="1300" />
+        </div>
+
+      </div>
+    </section>
+
+
+
+    <!-- RESPIRATION -->
+    <div class="h-28 md:h-32 bg-white"></div>
+
+    <!-- THANKS FOR WATCHING -->
+    <section id="thanks"
+      class="bleed-white min-h-[70vh] md:min-h-[80vh] flex items-center justify-center px-6 sm:px-10 text-black">
+      <div class="text-center leading-none">
+        <div class="font-cormorant text-[90px] sm:text-[120px] md:text-[150px] tracking-tight">
+          thank you for
+        </div>
+
+        <div class="relative inline-block mt-2">
+          <div class="font-snell italic text-[120px] sm:text-[150px] md:text-[200px]">
+            watching
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <div class="h-28 md:h-24 bg-white"></div>
+
+    <script>
+      window.addEventListener('load', function () {
+        // Fade in the text after 200ms
+        setTimeout(function () {
+          document.getElementById('preloader-text').style.opacity = '1';
+        }, 200);
+
+        // After 1.5 seconds total (text shown for 1.3s), fade out the preloader
+        setTimeout(function () {
+          const preloader = document.getElementById('preloader');
+          preloader.style.opacity = '0';
+          setTimeout(function () {
+            preloader.style.display = 'none';
+            // After preloader hides, fade in the year after 300ms
+            setTimeout(function () {
+              document.getElementById('year').style.opacity = '1';
+            }, 300);
+          }, 500); // Match the transition duration
+        }, 1500);
+
+        // Moodboard animation
+        const moodboardSection = document.getElementById('moodboard');
+        const moodboardImages = moodboardSection.querySelectorAll('img');
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              moodboardImages.forEach((img, index) => {
+                const delay = parseInt(img.dataset.delay) || 0;
+                setTimeout(() => {
+                  img.style.opacity = '1';
+                }, delay);
+              });
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        observer.observe(moodboardSection);
+      });
+    </script>
+
+</body>
+
+</html>
